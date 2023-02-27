@@ -1,0 +1,15 @@
+*{
+  background-color: cornflowerblue;
+}
+@keyframes logo {
+  from:{
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+img{
+  max-width: 30%;
+  animation: logo 2s infinite alternate-reverse;
+}
