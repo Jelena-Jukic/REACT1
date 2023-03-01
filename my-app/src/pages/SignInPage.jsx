@@ -2,7 +2,7 @@ import {useState} from "react";
 import { InputFormField } from "../components/InputFormField";
 import {SubmitFormField} from "../components/SubmitFormField";
 
-export function SignInPage () {
+export function SignInPage (props) {
     const stateArray = useState(' ');
     const fromState = stateArray[0];
     const setFromState = stateArray[1];
@@ -12,7 +12,7 @@ export function SignInPage () {
 
     function handleSubmit (event){
         event.preventDefault();
-        console.log (fromState);
+        props.onSubmit(fromState);
     }
 function handleUsernameChange (value){
     setFromState(value);
