@@ -1,14 +1,18 @@
 import {useState} from "react";
+import { Button } from "../components/Button";
 import { InputFormField } from "../components/InputFormField";
 import { RandomNameButton } from "../components/RandomNameButton";
-import {SubmitFormField} from "../components/SubmitFormField";
+import {getRandomName} from"../library/random";
+import { FormField } from "../components/FormField";
 
 export function SignInPage (props) {
-    const stateArray = useState(' ');
+ /*   const stateArray = useState(' ');
     const fromState = stateArray[0];
     const setFromState = stateArray[1];
 
-    // ili umjesto prethodno: [fromState, setFromState] = useState (' ');
+ili umjesto prethodno:
+*/ 
+const [fromState, setFromState] = useState (getRandomName());
 
 
     function handleSubmit (event){
@@ -25,9 +29,13 @@ console.log(fromState);
         <div className="sign-in-form">
             <div className="card">
             <form className="sign-in-form" onSubmit={handleSubmit}>
-             <InputFormField label = "Username" type ="text" onChange ={handleUsernameChange} value={fromState}/>
-             <RandomNameButton onRandomName={handleUsernameChange}/>
-             <SubmitFormField label="Sign in"/>  
+             <InputFormField label = "Username" type ="text" onChange ={handleUsernameChange} value={fromState}/> 
+             <FormField>
+                 <RandomNameButton onRandomName={handleUsernameChange}/>
+                </FormField>
+             <FormField>
+                 <Button type="submit" label= "Sign in"/>
+            </FormField>
             </form>
             </div>
         </div>
