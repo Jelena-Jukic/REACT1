@@ -1,42 +1,27 @@
-import {useState} from "react";
-import { Button } from "../components/Button";
-import { InputFormField } from "../components/InputFormField";
-import { RandomNameButton } from "../components/RandomNameButton";
-import {getRandomName} from"../library/random";
-import { FormField } from "../components/FormField";
+import { useContext } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { MessageOfTheDay } from "../components/MessageOfTheDay";
+import { SignInForm } from "../components/SignInForm";
+import { AppContext } from "../contexts/AppContext";
 
-export function SignInPage (props) {
- /*   const stateArray = useState(' ');
-    const fromState = stateArray[0];
-    const setFromState = stateArray[1];
+export function SignInPage() {
+    const context = useContext(AppContext);
 
-ili umjesto prethodno:
-*/ 
-const [fromState, setFromState] = useState (getRandomName());
-
-
-    function handleSubmit (event){
-        event.preventDefault();
-        props.onSubmit(fromState);
+    function handleSubmit(formData) {
+        context.setUsername(formData.username);
+        context.setAvatarIndex(formData.avatarIndex);
     }
-function handleUsernameChange (value){
-    setFromState(value);
-}
 
-console.log(fromState);
+    if (context.isSignedIn) {
+        return <Navigate to="/chat" replace />;
+    }
 
     return (
-        <div className="sign-in-form">
+        <div className="sign-in-page">
+            <MessageOfTheDay />
             <div className="card">
-            <form className="sign-in-form" onSubmit={handleSubmit}>
-             <InputFormField label = "Username" type ="text" onChange ={handleUsernameChange} value={fromState}/> 
-             <FormField>
-                 <RandomNameButton onRandomName={handleUsernameChange}/>
-                </FormField>
-             <FormField>
-                 <Button type="submit" label= "Sign in"/>
-            </FormField>
-            </form>
+                <SignInForm onSubmit={handleSubmit} />
+                <Link to="/faq">Read the FAQ</Link>
             </div>
         </div>
     );

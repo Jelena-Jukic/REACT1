@@ -1,21 +1,45 @@
-import { InputFormField } from "../components/InputFormField";
+import { useContext } from "react";
+import { useState } from "react";
 import { Message } from "../components/Message";
-import { SubmitFormField } from "../components/SubmitFormField";
+import { MessageForm } from "../components/MessageForm";
+import { AppContext } from "../contexts/AppContext";
+import { Navigate } from "react-router-dom";
 
-export function ChatPage (props){
+export function ChatPage() {
+    const [ messages, setMessages] = useState([]);
+    const context = useContext(AppContext);
+
+    function handleSubmit(message) {
+        setMessages([ ...messages, message]);
+    }
+    function hanleSignOut(){
+        context.setUsername("");
+    }
+
+    const messageComponents = messages.map((message) => {
+        return <Message
+            key={message.id}
+            avatarIndex={message.author.avatarIndex}
+            author={message.author.username}
+            text={message.text}
+        />;
+    });
+
+    if (!context.isSignedIn) {
+        return <Navigate to="/" replace />;
+    }
+
     return (
         <div>
             Chat page
-            <div className="massage-list">
-             <Message author="Domagoj" text="Lorem ipsum"/>
-             <Message author="Udenko" text="Dolor sit amet"/>             
+            <button type="button" onClick={hanleSignOut}>Sign out</button>
+            <div className="message-list">
+                {messageComponents}
             </div>
-        <form action="">
-            <InputFormField/>
-            <SubmitFormField label="Send"/>
-        </form>
-
+            <MessageForm onSubmit={handleSubmit}
+                username={context.username}
+                avatarIndex={context.avatarIndex}
+            />
         </div>
     );
-
 };
