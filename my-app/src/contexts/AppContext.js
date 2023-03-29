@@ -4,30 +4,25 @@ export const AppContext = React.createContext("Please use AppProvider");
 
 export const AppConsumer = AppContext.Consumer;
 
-
-
 export function AppProvider(props) {
     const [ username, setUsername ] = useState('');
     const [ avatarIndex, setAvatarIndex ] = useState(0);
-    const [config, setConfig] = useState(null);
-    const [ error, setError] = useState(null);
+    const [ config, setConfig ] = useState(null);
+    const [ error, setError ] = useState(null);
 
     useEffect(() => {
         fetch("/assets/config.json")
-        .then(response=>{
-            return response.json();
-        })
-        .then(json=> {
-            console.log(json);
-        })
-        .catch(error =>{
-            setError(error);
-        });
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                setConfig(json);
+            })
+            .catch(error => {
+                setError(error);
+            });
     }, []);
-
     
-
-        console.log(config);
 
     return (
         <AppContext.Provider value={{

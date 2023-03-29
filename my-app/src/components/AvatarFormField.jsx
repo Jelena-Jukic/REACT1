@@ -10,8 +10,6 @@ export function AvatarFormField(props) {
         props.onChange(index);
     }, [index, props]);
 
-    
-
     function handlePreviousClick() {
         if (index <= 0) {
             setIndex(avatarImages.length - 1);

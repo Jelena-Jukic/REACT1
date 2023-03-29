@@ -4,16 +4,24 @@ import { Message } from "../components/Message";
 import { MessageForm } from "../components/MessageForm";
 import { AppContext } from "../contexts/AppContext";
 import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export function ChatPage() {
     const [ messages, setMessages] = useState([]);
+    const [ client, setClient ] = useState(null);
+    const [ chatRoom, setChatRoom ] = useState(null);
+    const [ ready, setReady ] = useState(false);
     const context = useContext(AppContext);
 
     function handleSubmit(message) {
-        setMessages([ ...messages, message]);
+        client.publish({
+            room: 'algebra',
+            message: message,
+        });
     }
-    function hanleSignOut(){
-        context.setUsername("");
+
+    function handleSignOut() {
+        context.setUsername('');
     }
 
     const messageComponents = messages.map((message) => {
@@ -25,6 +33,32 @@ export function ChatPage() {
         />;
     });
 
+    useEffect(() => {
+        const drone = new window.Scaledrone('jv6H2VnzllmIY234');
+
+        drone.on('open', (error) => {
+            if (error) {
+                console.log(error);
+            } else {
+                const room = drone.subscribe('algebra');
+
+                setClient(drone);
+                setChatRoom(room);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (chatRoom !== null && !ready) {
+            chatRoom.on('data', (data) => {
+                setMessages((messages) => {
+                    return [ ...messages, data ];
+                });
+            });
+            setReady(true);
+        }
+    }, [chatRoom, ready]);
+
     if (!context.isSignedIn) {
         return <Navigate to="/" replace />;
     }
@@ -32,7 +66,7 @@ export function ChatPage() {
     return (
         <div>
             Chat page
-            <button type="button" onClick={hanleSignOut}>Sign out</button>
+            <button type="button" onClick={handleSignOut}>Sign out</button>
             <div className="message-list">
                 {messageComponents}
             </div>
